@@ -70,6 +70,7 @@ export async function deleteUser(params: DeleteUserParams) {
     // Delete user questions
     await Question.deleteMany({ author: user._id });
 
+    console.log(userQuestionIds);
     // Delete user answers
 
     const deletedUser = await User.findOneAndDelete({ clerkId });
