@@ -5,66 +5,18 @@ import NoResult from '@/components/shared/NoResult'
 import LocalSearchbar from '@/components/shared/search/LocalSearchbar'
 import { Button } from '@/components/ui/button'
 import { HomePageFilters } from '@/constants/filters'
+import { getQuestions } from '@/lib/actions/question.action'
 import Link from 'next/link'
 import React from 'react'
 
 
-const questions = [
-    {
-        _id: "1",
-        title: "What is TypeScript?",
-        tags: [
-            { _id: "101", name: "typescript" },
-            { _id: "102", name: "javascript" }
-        ],
-        author: {
-            _id: "201",
-            name: "John Doe",
-            picture: "https://example.com/johndoe.jpg"
-        },
-        upvotes: 10,
-        views: 4000,
-        answers: [],
-        createdAt: new Date("2023-06-29T00:00:00Z")
-    },
-    {
-        _id: "2",
-        title: "How to use interfaces in TypeScript?",
-        tags: [
-            { _id: "103", name: "typescript" },
-            { _id: "104", name: "interfaces" }
-        ],
-        author: {
-            _id: "202",
-            name: "Jane Smith",
-            picture: "https://example.com/janesmith.jpg"
-        },
-        upvotes: 5,
-        views: 500552,
-        answers: [],
-        createdAt: new Date("2024-06-28T00:00:00Z")
-    },
-    {
-        _id: "3",
-        title: "What are the benefits of using TypeScript?",
-        tags: [
-            { _id: "105", name: "typescript" },
-            { _id: "106", name: "benefits" }
-        ],
-        author: {
-            _id: "203",
-            name: "Alice Johnson",
-            picture: "https://example.com/alicejohnson.jpg"
-        },
-        upvotes: 20,
-        views: 20000000,
-        answers: [],
-        createdAt: new Date("2024-06-27T00:00:00Z")
-    }
-];
 
-const Home = () => {
+export default async function Home() {
 
+
+    const result = await getQuestions({});
+
+    console.log(result.questions);
 
 
 
@@ -102,8 +54,8 @@ const Home = () => {
             <HomeFilters />
             <div className='mt-10 flex w-full flex-col gap-6'>
                 {
-                    (questions.length > 0) ?
-                        questions.map((question) => (
+                    (result.questions.length > 0) ?
+                        result.questions.map((question) => (
                             <QuestionCard key={question._id}
                                 _id={question._id}
                                 title={question.title}
@@ -128,5 +80,3 @@ const Home = () => {
         </>
     )
 }
-
-export default Home
