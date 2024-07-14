@@ -18,7 +18,7 @@ export default async function Home() {
 
     console.log(result.questions);
 
-
+    console.log("yrr this should work atleast!!");
 
     return (
         <>
