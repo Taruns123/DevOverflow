@@ -1,8 +1,4 @@
 import React from 'react'
-import {
-  ClerkProvider,
-} from '@clerk/nextjs'
-
 import './globals.css'
 
 // eslint-disable-next-line camelcase
@@ -44,18 +40,10 @@ export default function RootLayout({
 
     <html lang="en">
       <body className={`${inter.variable} ${spaceGrotesk.variable} `}>
-        <ClerkProvider
-          appearance={{
-            elements: {
-              formButtonPrimary: 'primary-gradient',
-              footerActionLink: 'primary-text-gradient hover:text-primary-500'
-            }
-          }}
-        >
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
-        </ClerkProvider>
+
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

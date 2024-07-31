@@ -32,6 +32,7 @@ const Question = ({ mongoUserId }: Props) => {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    console.log("this is the mongoUserId", mongoUserId);
     const editorRef = useRef(null);
 
     const router = useRouter();
@@ -57,7 +58,7 @@ const Question = ({ mongoUserId }: Props) => {
                 title: values.title,
                 content: values.explanation,
                 tags: values.tags,
-                author: JSON.parse(mongoUserId),
+                author: mongoUserId,
                 path: pathname,
             });
 
@@ -121,7 +122,7 @@ const Question = ({ mongoUserId }: Props) => {
                             <FormControl className='mt-3.5'>
                                 <Input className='no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border' {...field} />
                             </FormControl>
-                            <FormDescription className='body-regular text-light-500 mt-2.5'>
+                            <FormDescription className='body-regular mt-2.5 text-light-500'>
                                 Be specific and imagine you&apos;re asking a question to another person.
                             </FormDescription>
                             <FormMessage className='text-red-500' />
@@ -163,7 +164,7 @@ const Question = ({ mongoUserId }: Props) => {
                                     }}
                                 />
                             </FormControl>
-                            <FormDescription className='body-regular text-light-500 mt-2.5'>
+                            <FormDescription className='body-regular mt-2.5 text-light-500'>
                                 Introduce the problem and expand on what you put in the title. Minimum 20 characters.
                             </FormDescription>
                             <FormMessage className='text-red-500' />
@@ -199,14 +200,14 @@ const Question = ({ mongoUserId }: Props) => {
                                     </div>)}
                                 </>
                             </FormControl>
-                            <FormDescription className='body-regular text-light-500 mt-2.5'>
+                            <FormDescription className='body-regular mt-2.5 text-light-500'>
                                 Add up to 3 tags to describe what your question is about. You need to press enter to add a tag.
                             </FormDescription>
                             <FormMessage className='text-red-500' />
                         </FormItem>
                     )}
                 />
-                <Button className='primary-gradient !text-light-900 w-fit' disabled={isSubmitting} type="submit">
+                <Button className='primary-gradient w-fit !text-light-900' disabled={isSubmitting} type="submit">
                     {isSubmitting ? (
                         <>
                             {type === 'edit' ? 'Editing...' : 'Posting...'}

@@ -110,15 +110,24 @@ export interface GetTopInteractedTagsParams {
 }
 
 export interface CreateUserParams {
-  clerkId: string;
   name: string;
   username: string;
   email: string;
   picture: string;
+  password: string;
+}
+
+export interface GetUserByTokenParams {
+  token: string;
 }
 
 export interface GetUserByIdParams {
-  userId: string;
+  email: string;
+}
+
+export interface GetUserLoginParams {
+  email: string;
+  password: string;
 }
 
 export interface GetAllUsersParams {
@@ -129,7 +138,7 @@ export interface GetAllUsersParams {
 }
 
 export interface UpdateUserParams {
-  clerkId: string;
+  email: string;
   updateData: Partial<IUser>;
   path: string;
 }
@@ -141,7 +150,7 @@ export interface ToggleSaveQuestionParams {
 }
 
 export interface GetSavedQuestionsParams {
-  clerkId: string;
+  email: string;
   page?: number;
   pageSize?: number;
   filter?: string;
@@ -155,5 +164,5 @@ export interface GetUserStatsParams {
 }
 
 export interface DeleteUserParams {
-  clerkId: string;
+  email: string;
 }
