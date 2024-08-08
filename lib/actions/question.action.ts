@@ -1,9 +1,14 @@
 "use server";
 
 import Question from "@/database/question.model";
-import { connectToDatabase } from "../mongoose";
 import Tag from "@/database/tag.model";
-import { CreateQuestionParams, GetQuestionsParams } from "./shared.type";
+import { connectToDatabase } from "../mongoose";
+import {
+  CreateQuestionParams,
+  GetQuestionByIdParams,
+  GetQuestionsParams,
+  QuestionVoteParams,
+} from "./shared.type";
 import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 
@@ -24,14 +29,12 @@ export async function getQuestions(params: GetQuestionsParams) {
 }
 
 export async function createQuestion(params: CreateQuestionParams) {
-  // eslint-disable-next-line no-empty
   try {
     connectToDatabase();
 
     const { title, content, tags, author, path } = params;
-    // path refers to the path of pages that needs to be re rendered after the create question
 
-    // create a question
+    // Create the question
     const question = await Question.create({
       title,
       content,
@@ -40,6 +43,7 @@ export async function createQuestion(params: CreateQuestionParams) {
 
     const tagDocuments = [];
 
+    // Create the tags or get them if they already exist
     for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
@@ -47,18 +51,109 @@ export async function createQuestion(params: CreateQuestionParams) {
         { upsert: true, new: true }
       );
 
-      tagDocuments.push(existingTag);
+      tagDocuments.push(existingTag._id);
     }
 
     await Question.findByIdAndUpdate(question._id, {
       $push: { tags: { $each: tagDocuments } },
     });
 
-    revalidatePath(path);
+    // Create an interaction record for the user's ask_question action
 
-    // Create an interaction recocrd for the user's ask_question action
     // Increment author's reputation by +5 for creating a question
+
+    revalidatePath(path);
+  } catch (error) {}
+}
+
+export async function getQuestionById(params: GetQuestionByIdParams) {
+  try {
+    connectToDatabase();
+
+    const { questionId } = params;
+
+    const question = await Question.findById(questionId)
+      .populate({ path: "tags", model: Tag, select: "_id name" })
+      .populate({
+        path: "author",
+        model: User,
+        select: "_id clerkId name picture",
+      });
+    // console.log("question...", ;
+    return question;
   } catch (error) {
-    console.error(error);
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function upvoteQuestion(params: QuestionVoteParams) {
+  try {
+    connectToDatabase();
+
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+
+    let updateQuery = {};
+
+    if (hasupVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else if (hasdownVoted) {
+      updateQuery = {
+        $pull: { downvotes: userId },
+        $push: { upvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    // Increment author's reputation by +10 for upvoting a question
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+export async function downvoteQuestion(params: QuestionVoteParams) {
+  try {
+    connectToDatabase();
+
+    const { questionId, userId, hasupVoted, hasdownVoted, path } = params;
+
+    let updateQuery = {};
+
+    if (hasdownVoted) {
+      updateQuery = { $pull: { downvotes: userId } };
+    } else if (hasupVoted) {
+      updateQuery = {
+        $pull: { upvotes: userId },
+        $push: { downvotes: userId },
+      };
+    } else {
+      updateQuery = { $addToSet: { dowvotes: userId } };
+    }
+
+    const question = await Question.findByIdAndUpdate(questionId, updateQuery, {
+      new: true,
+    });
+
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    // Increment author's reputation by +10 for upvoting a question
+
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }

@@ -13,7 +13,7 @@ const SignUp = () => {
         name: "",
         username: "",
         email: "",
-        picture: "default-picture",
+        picture: "https://i.ibb.co/p2W47qv/Screenshot-2024-07-31-230307.png",
         password: "",
     })
 

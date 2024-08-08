@@ -1,48 +1,20 @@
-'use client'
+'use server'
 import Question from '@/components/forms/Question'
-import axios from 'axios';
+import jwt from 'jsonwebtoken';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import React from 'react'
 
-const Page = () => {
-
-    // const { userId } = auth();
-    // const userId = await getUserByToken({token: ''});
-
-    // const userId = "sdfdsfds"
-
-    const [mongoUser, setMongoUser] = React.useState<any>(null);
-    const [mongoUserId, setMongoUserId] = React.useState<any>(null);
-
-    const getUserByToken = async () => {
-
-        try {
-            const user = await axios.get('/api/get-user-from-token');
-            setMongoUser(user.data.data);
-            console.log("user from token....", user);
-            return user;
-        } catch (error) {
-
-            console.error(error);
-        }
-    }
+const Page = async () => {
 
 
-    React.useEffect(() => {
+    const cookieStore = cookies();
+    const token = cookieStore.get('token');
+    console.log("token", token);
+    if (!token) redirect('/sign-in');
 
-        getUserByToken();
-    }, [])
-
-
-    React.useEffect(() => {
-        console.log("object mongouser set", mongoUser);
-        setMongoUserId(mongoUser?._id);
-    }, [mongoUser])
-
-
-    // if (!userId) redirect('/sign-in');
-
-
-
+    const user: any = jwt.verify(token?.value, process.env.TOKEN_SECRET!);
+    const mongoUserId = user?.id;
 
     return (
         <div className='h1-bold text-dark100_light900'>
