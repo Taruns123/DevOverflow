@@ -16,7 +16,15 @@ const Navbar = () => {
     const token = cookieStore.get('token');
     console.log("token", token);
     if (!token) redirect('/sign-in');
-    const user: any = jwt.verify(token?.value, process.env.TOKEN_SECRET!);
+
+    let user: any = null;
+    try {
+
+        user = jwt.verify(token?.value, process.env.TOKEN_SECRET!);
+    }
+    catch (error) {
+        redirect('/sign-in');
+    }
     const picture: string = user?.picture
 
 

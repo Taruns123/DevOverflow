@@ -124,6 +124,9 @@ export interface GetUserByTokenParams {
 export interface GetUserByIdParams {
   email: string;
 }
+export interface GetUserInfoParams {
+  id: string;
+}
 
 export interface GetUserLoginParams {
   email: string;

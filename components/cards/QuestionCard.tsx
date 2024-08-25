@@ -3,6 +3,7 @@ import React from 'react'
 import RenderTag from '../shared/RenderTag'
 import Metric from '../shared/Metric'
 import { formatAndDivideNumbers, getTimeStamp } from '@/lib/utils'
+import EditDeleteAction from '../shared/EditDeleteAction'
 
 interface QuestionProps {
     _id: string
@@ -12,7 +13,8 @@ interface QuestionProps {
     upvotes: number,
     views: number,
     answers: Array<object>,
-    createdAt: Date
+    createdAt: Date,
+    email?: string | null
 }
 
 const QuestionCard = (
@@ -25,7 +27,8 @@ const QuestionCard = (
         upvotes,
         views,
         answers,
-        createdAt
+        createdAt,
+        email
     }
         : QuestionProps
 ) => {
@@ -45,6 +48,7 @@ const QuestionCard = (
                 </div>
 
                 {/* If signed in add edit and delete options */}
+                <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
             </div>
             <div className=' mt-3.5 flex flex-wrap gap-2'>
                 {tags.map(tag => (

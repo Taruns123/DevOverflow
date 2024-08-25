@@ -40,3 +40,12 @@ export const formatAndDivideNumbers = (num: number): string => {
     return num?.toString();
   }
 };
+
+export const getJoinedDate = (date: Date): string => {
+  // Get the month and year from the Date object
+  const month = date?.toLocaleString("default", { month: "long" });
+  const year = date?.getFullYear();
+
+  // Return the formatted date as "Month Year"
+  return `${month} ${year}`;
+};

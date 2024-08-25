@@ -7,7 +7,8 @@ import { usePathname } from "next/navigation"
 import React from 'react'
 import { Button } from "../ui/button";
 
-const LeftSidebar = () => {
+const LeftSidebar = ({ userId }: { userId: any }) => {
+
 
     const pathname = usePathname();
     return (
@@ -15,6 +16,15 @@ const LeftSidebar = () => {
             <div className='flex h-full flex-col gap-6 '>
                 {sidebarLinks.map((item) => {
                     const isActive = (pathname.includes(item.route) && item.route.length > 1) || (pathname === item.route)
+                    // TODO -> profile/id
+                    if (item.route === '/profile') {
+                        if (userId) {
+                            item.route = `/profile/${userId}`
+                        }
+                        else {
+                            return null
+                        }
+                    }
                     return (
                         <Link key={item.route} href={item.route}
                             className={`${isActive ? 'primary-gradient rounded-lg text-light-900' : 'text-dark300_light900'} flex items-center justify-start gap-4 bg-transparent p-4`}
