@@ -50,7 +50,7 @@ const UserCard = async ({ user }: Props) => {
                         <div>
                             <div className="flex items-center gap-2">
                                 {interactedTags.map((tag) => (
-                                    <RenderTag key={tag._id} name={tag.name} />
+                                    <RenderTag _id={tag._id.toString()} key={tag._id} name={tag.name} />
                                 ))}
                             </div>
                         </div>
