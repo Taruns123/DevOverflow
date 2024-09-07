@@ -14,7 +14,7 @@ import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-const Page = async ({ params, searchParams }) => {
+const Page = async ({ params, searchParams }: any) => {
     const cookieStore = cookies();
     const token = cookieStore.get('token');
     console.log("token", token);
