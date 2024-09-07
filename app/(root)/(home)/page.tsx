@@ -2,19 +2,26 @@ import QuestionCard from '@/components/cards/QuestionCard'
 import HomeFilters from '@/components/home/HomeFilters'
 import Filter from '@/components/shared/Filter'
 import NoResult from '@/components/shared/NoResult'
+import Pagination from '@/components/shared/Pagination'
 import LocalSearchbar from '@/components/shared/search/LocalSearchbar'
 import { Button } from '@/components/ui/button'
 import { HomePageFilters } from '@/constants/filters'
 import { getQuestions } from '@/lib/actions/question.action'
+import { SearchParamsProps } from '@/types'
 import Link from 'next/link'
 import React from 'react'
 
 
 
-export default async function Home() {
+export default async function Home({ searchParams }: SearchParamsProps) {
 
 
-    const result = await getQuestions({});
+
+    const result = await getQuestions({
+        searchQuery: searchParams.q,
+        filter: searchParams.filter,
+        page: searchParams.page ? +searchParams.page : 1
+    });
 
     console.log(result.questions);
 
@@ -75,6 +82,10 @@ export default async function Home() {
                         />
                 }
 
+            </div>
+
+            <div className='mt-10'>
+                <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={result.isNext} />
             </div>
 
         </>

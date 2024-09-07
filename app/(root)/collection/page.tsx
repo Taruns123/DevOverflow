@@ -8,10 +8,12 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import jwt from 'jsonwebtoken'
+import { SearchParamsProps } from '@/types'
+import Pagination from '@/components/shared/Pagination'
 
 
 
-export default async function Collection() {
+export default async function Collection({ searchParams }: SearchParamsProps) {
 
     const cookieStore = cookies();
     const token = cookieStore.get('token');
@@ -24,7 +26,10 @@ export default async function Collection() {
     if (!email) redirect('/sign-in');
 
     const result = await getSavedQuestions({
-        email
+        email,
+        searchQuery: searchParams.q,
+        filter: searchParams.filter,
+        page: searchParams.page ? +searchParams.page : 1
     });
 
 
@@ -38,7 +43,7 @@ export default async function Collection() {
 
             <div className='mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center'>
                 <LocalSearchbar
-                    route="/"
+                    route="/collection"
                     iconPosition="left"
                     imgSrc="/assets/icons/search.svg"
                     placeholder="Search for questions"
@@ -75,6 +80,10 @@ export default async function Collection() {
                         />
                 }
 
+            </div>
+
+            <div className='mt-10'>
+                <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={result?.isNext ? result.isNext : false} />
             </div>
 
         </>

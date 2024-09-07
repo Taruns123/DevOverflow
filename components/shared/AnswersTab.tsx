@@ -2,6 +2,7 @@ import { getUserAnswers } from '@/lib/actions/user.action';
 import { SearchParamsProps } from '@/types';
 import React from 'react'
 import AnswerCard from '../cards/AnswerCard';
+import Pagination from './Pagination';
 
 
 interface Props extends SearchParamsProps {
@@ -9,9 +10,9 @@ interface Props extends SearchParamsProps {
     email?: string | null;
 }
 
-const AnswersTab = async ({ serachParams, userId, email }: Props) => {
+const AnswersTab = async ({ searchParams, userId, email }: Props) => {
 
-    const result = await getUserAnswers({ userId, page: 1 })
+    const result = await getUserAnswers({ userId, page: searchParams.page ? +searchParams.page : 1 });
 
     return (
         <>
@@ -28,6 +29,9 @@ const AnswersTab = async ({ serachParams, userId, email }: Props) => {
                     />
                 ))
             }
+            <div className='mt-10'>
+                <Pagination pageNumber={searchParams?.page ? +searchParams.page : 1} isNext={result?.isNext ? result.isNext : false} />
+            </div>
         </>
     )
 }
